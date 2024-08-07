@@ -19,7 +19,55 @@ const renderNewQuote = async () => {
     quoteSelection.innerHTML += arr.join("");
 };
 
+userInput.addEventListener("input", () => {
+    let quoteChars = document.querySelectorAll(".quote-chars");
+    quoteChars = Array.from(quoteChars);
 
+    let userInputChars = userInput.value.split("");
+    quoteChars.forEach((char, index) => {
+        if(char.innerText == userInputChars[index]) {
+            char.classList.add("success");
+        }
+        else if (userInputChars[index] == null) {
+            if(char.classList.contains("success")){
+                char.classList.remove("success");
+            }else{
+                char.classList.remove("fail");
+            }
+        }
+        else{
+            if(!char.classList.contains("fail")) {
+                mistakes++;
+                char.classList.add("fail");
+            }
+            document.getElementById("mistakes").innerText = mistakes;
+        }
+
+        let check = quoteChars.every((element) => {
+            return element.classList.contains("success");
+        });
+
+        if (check) {
+            displayResult();
+        }
+    });
+    
+    });
+
+    function updateTimer() {
+        if(time == 0){
+            displayResult();
+        }else{
+            document.getElementById("timer").innerText = --time + "s";
+        }
+    }
+
+    const timeReduce = () => {
+        time = 60;
+        timer = setInterval(updateTimer, 1000);
+    };
+
+    
 
 
 
