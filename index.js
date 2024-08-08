@@ -1,5 +1,5 @@
 const quoteApiUrl = "https://api.quotable.io/random?minLength=80&maxLength=100";
-const quoteSelection = document.getElementById("quote");
+const quoteSection = document.getElementById("quote");
 const userInput = document.getElementById("quote-input");
 
 let quote = "";
@@ -14,9 +14,9 @@ const renderNewQuote = async () => {
 
 
     let arr = quote.split("").map((value) => {
-    return "<span class='quote-chars'>" + value + "<span>";
+        return "<span class='quote-chars'>" + value + "</span>";
     });
-    quoteSelection.innerHTML += arr.join("");
+    quoteSection.innerHTML += arr.join("");
 };
 
 userInput.addEventListener("input", () => {
@@ -31,12 +31,12 @@ userInput.addEventListener("input", () => {
         else if (userInputChars[index] == null) {
             if(char.classList.contains("success")){
                 char.classList.remove("success");
-            }else{
+            } else {
                 char.classList.remove("fail");
             }
         }
-        else{
-            if(!char.classList.contains("fail")) {
+        else {
+            if (!char.classList.contains("fail")) {
                 mistakes++;
                 char.classList.add("fail");
             }
@@ -52,22 +52,52 @@ userInput.addEventListener("input", () => {
         }
     });
     
-    });
+});
 
-    function updateTimer() {
-        if(time == 0){
-            displayResult();
-        }else{
-            document.getElementById("timer").innerText = --time + "s";
-        }
+function updateTimer() {
+    if (time == 0) {
+        displayResult();
+    } else {
+        document.getElementById("timer").innerText = --time + "s";
     }
+}
 
-    const timeReduce = () => {
-        time = 60;
-        timer = setInterval(updateTimer, 1000);
-    };
+const timeReduce = () => {
+    time = 60;
+    timer = setInterval(updateTimer, 1000);
+};
 
-    
+const displayResult = () => {
+    document.querySelector(".result").style.display = "block";
+    clearInterval(timer);
+    document.getElementById("stop-test").style.display = "none";
+    userInput.disabled = true;
+    let timeTaken = 1;
+    if (time != 0) {
+        timeTaken = (60 - time) / 100;
+    }
+    document.getElementById("wpm").innerText = (userInput.value.length / 5 / timeTaken).toFixed(2) + "wpm";
+    document.getElementById("accuracy").innerText = Math.round(((userInput.value.length - mistakes) / userInput.value.length) * 100) + "%";
+};
+
+const startTest = () => {
+    mistakes = 0;
+    timer = "";
+    userInput.disabled = false;
+    timeReduce();
+    document.getElementById("start-test").style.display = "none";
+    document.getElementById("stop-test").style.display = "block";
+};
+
+window.onload = () => {
+    userInput.value = "";
+    document.getElementById("start-test").style.display = "block";
+    document.getElementById("stop-test").style.display = "none";
+    userInput.disabled = true;
+    renderNewQuote();
+}
+
+
 
 
 
